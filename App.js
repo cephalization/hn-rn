@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { NavBar } from "galio-framework";
 
+import { Posts } from "./pages";
 import { theme } from "./theme";
 
 export default function App() {
@@ -16,7 +17,7 @@ export default function App() {
     <SafeAreaView style={styles.safeContainer}>
       <NavBar title="HNRN" style={styles.NavBar} />
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+        <Posts />
       </View>
     </SafeAreaView>
   );
