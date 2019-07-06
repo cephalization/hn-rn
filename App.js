@@ -1,6 +1,15 @@
 import React from "react";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Platform,
+  StatusBar
+} from "react-native";
 import { NavBar } from "galio-framework";
+
+import { theme } from "./theme";
 
 export default function App() {
   return (
@@ -18,15 +27,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: theme.white
   },
   safeContainer: {
     flex: 1,
-    marginTop: 16,
-    color: "#1B2021"
+    color: theme.black,
+    backgroundColor: theme.white,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   },
   NavBar: {
-    borderBottomColor: "grey",
-    borderBottomWidth: 1
+    backgroundColor: theme.primary,
+    fontSize: 28,
+    fontFamily: "System"
   }
 });
