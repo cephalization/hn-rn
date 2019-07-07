@@ -26,8 +26,6 @@ const MainNavigator = createStackNavigator(
 
 const Page = createAppContainer(MainNavigator);
 
-console.log(store.getState());
-
 const App = () => {
   return (
     <Provider store={store}>
