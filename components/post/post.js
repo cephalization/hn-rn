@@ -16,7 +16,7 @@ const Post = ({ story, onClick }) => {
   const { title, score, url, by } = story;
 
   const onPress = () => {
-    onClick(story);
+    onClick();
   };
 
   return (

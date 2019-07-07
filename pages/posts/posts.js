@@ -1,17 +1,24 @@
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 import { stories } from "./debug-data";
 import { Post } from "../../components/post";
 
-const generatePost = ({ push }) => ({ id, ...story }) => (
-  <Post key={id} onClick={story => push("Post", { story })} story={story} />
+const generatePost = ({ push }) => ({ item }) => (
+  <Post onClick={() => push("Post", { story: item })} story={item} />
 );
 
-export const Posts = ({ navigation }) => {
-  const posts = stories.map(generatePost(navigation));
+const extractor = item => `${item.id}`;
 
-  return <ScrollView style={styles.container}>{posts}</ScrollView>;
+export const Posts = ({ navigation }) => {
+  return (
+    <FlatList
+      style={styles.container}
+      renderItem={generatePost(navigation)}
+      data={stories}
+      keyExtractor={extractor}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
