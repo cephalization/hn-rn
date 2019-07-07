@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FlatList, View, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 import { Post } from "../../components/post";
 import { usePosts } from "../../hooks";
@@ -11,27 +11,23 @@ const generatePost = ({ push }) => ({ item }) => (
 const extractor = item => `${item.id}`;
 
 export const Posts = ({ navigation }) => {
-  const stories = usePosts();
+  const { loading, posts, getAllPostIds, getNextPosts } = usePosts();
 
   useEffect(() => {
-    stories.getAllPostIds();
+    getAllPostIds();
   }, []);
-
-  const loadMorePosts = () => stories.getNextPosts(stories);
-  const refreshPosts = () => stories.getAllPostIds();
 
   return (
     <FlatList
       style={styles.container}
       renderItem={generatePost(navigation)}
-      onRefresh={refreshPosts}
-      onEndReached={loadMorePosts}
-      data={stories.posts}
+      onRefresh={getAllPostIds}
+      onEndReached={getNextPosts}
+      data={posts}
       keyExtractor={extractor}
-      refreshing={stories.loading}
+      refreshing={loading}
       onEndReachedThreshold={1.5}
       initialNumToRender={20}
-      extraData={stories}
     />
   );
 };

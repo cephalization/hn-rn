@@ -1,3 +1,5 @@
+import uniq from "lodash/uniq";
+
 import { types } from "../../actions/posts/top-posts";
 
 const init = {
@@ -11,13 +13,12 @@ const init = {
 export const topPosts = (state = init, action) => {
   switch (action.type) {
     case types.setAllPostIds:
-      return { ...init, loading: true, postIds: uniq(action.payload) };
+      return { ...init, loading: true, allPostIds: uniq(action.payload) };
     case types.setNextPosts:
       return {
         ...state,
         posts: uniq([...state.posts, ...action.payload.posts]),
-        index: action.payload.index,
-        loading: false
+        index: action.payload.index
       };
     case types.setLoading:
       return { ...state, loading: action.payload };

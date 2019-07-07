@@ -3,6 +3,7 @@ import { put, select, call, takeLatest, all } from "redux-saga/effects";
 import {
   types,
   setAllPostIds,
+  setNextPosts,
   getNextPosts,
   setLoading
 } from "../../actions/posts/top-posts";
@@ -14,7 +15,7 @@ import {
 const PAGE = 20;
 
 function* getNextPostsEffect() {
-  put(setLoading(true));
+  yield put(setLoading(true));
   const allPostIds = yield select(selectAllPostIds);
   let index = yield select(selectIndex);
 
@@ -33,7 +34,7 @@ function* getNextPostsEffect() {
           }
         }
       );
-      const data = yield call(response.json);
+      const data = yield response.json();
 
       items.push(data);
       index += 1;
@@ -41,20 +42,16 @@ function* getNextPostsEffect() {
       nextItem = allPostIds[index];
     }
 
-    put(setPosts({ index, posts: items }));
+    yield put(setNextPosts({ index, posts: items }));
   } catch (e) {
-    console.warn("Could not fetch next top posts");
+    console.warn("Could not fetch next top posts", e);
   } finally {
-    put(setLoading(false));
+    yield put(setLoading(false));
   }
 }
 
-function* watchGetNextPosts() {
-  yield takeLatest(types.getNextPosts, getNextPostsEffect);
-}
-
 function* getAllPostIdsEffect() {
-  put(setLoading(true));
+  yield put(setLoading(true));
 
   try {
     const response = yield call(
@@ -66,24 +63,16 @@ function* getAllPostIdsEffect() {
         }
       }
     );
-    const data = yield call(response.json);
+    const data = yield response.json();
 
-    put(setAllPostIds(data));
-    put(getNextPosts());
+    yield put(setAllPostIds(data));
+    yield put(getNextPosts());
   } catch (e) {
     console.log(e);
   }
 }
 
-function* watchGetAllPostIds() {
-  yield takeLatest(types.getAllPostIds, getAllPostIdsEffect);
-}
-
 export function* topPostsSaga() {
-  yield all([
-    watchGetAllPostIds,
-    getAllPostIdsEffect,
-    watchGetNextPosts,
-    getNextPostsEffect
-  ]);
+  yield takeLatest(types.getAllPostIds, getAllPostIdsEffect);
+  yield takeLatest(types.getNextPosts, getNextPostsEffect);
 }

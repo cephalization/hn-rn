@@ -1,7 +1,7 @@
-const selectAllPostIds = state => state.topPosts.allPostIds;
+export const selectAllPostIds = state => state.topPosts.allPostIds;
 
-const selectIndex = state => state.topPosts.index;
+export const selectIndex = state => state.topPosts.index;
 
-export const topPostsSelectors = {
-  selectAllPostIds
-};
+export const selectLoading = state => state.topPosts.loading;
+
+export const selectPosts = state => state.topPosts.posts;
