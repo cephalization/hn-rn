@@ -1,25 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   TouchableOpacity,
   TouchableNativeFeedback,
-  Platform,
-  View
+  Platform
 } from "react-native";
-import { Block, Text, Icon } from "galio-framework";
+import { Block, Text } from "galio-framework";
 
-import { theme } from "../theme";
+import { theme } from "../../theme";
 
 const Touchable =
   Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
 
-export const Post = ({ title, score, url, by }) => {
+const Post = ({ story, onClick }) => {
+  const { title, score, url, by } = story;
+
+  const onPress = () => {
+    onClick(story);
+  };
+
   return (
-    <Touchable style={styles.touchable}>
+    <Touchable style={styles.touchable} onPress={onPress}>
       <Block row center card shadow space="between" style={styles.card}>
         <Block flex>
           <Text h6>{title}</Text>
-          <Text muted>{by}</Text>
+          <Text muted>
+            {by}
+            {url && ` - ${url}`}
+          </Text>
           <Text muted>{score}</Text>
         </Block>
       </Block>
@@ -40,3 +48,5 @@ const styles = StyleSheet.create({
     width: "100%"
   }
 });
+
+export default Post;

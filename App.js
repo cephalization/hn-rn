@@ -1,44 +1,30 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Platform,
-  StatusBar
-} from "react-native";
-import { NavBar } from "galio-framework";
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import { Posts } from "./pages";
+import { PostContent } from "./pages/post-content";
 import { theme } from "./theme";
 
-export default function App() {
-  return (
-    <SafeAreaView style={styles.safeContainer}>
-      <NavBar title="HNRN" style={styles.NavBar} />
-      <View style={styles.container}>
-        <Posts />
-      </View>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    backgroundColor: theme.white
+const MainNavigator = createStackNavigator(
+  {
+    Home: { screen: Posts, navigationOptions: { title: "Posts" } },
+    Post: { screen: PostContent, navigationOptions: { title: "Post" } }
   },
-  safeContainer: {
-    flex: 1,
-    color: theme.black,
-    backgroundColor: theme.white,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-  },
-  NavBar: {
-    backgroundColor: theme.primary,
-    fontSize: 28,
-    fontFamily: "System"
+  {
+    initialRouteName: "Home",
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: theme.primary,
+        fontFamily: "System"
+      }
+    }
   }
-});
+);
+
+const Page = createAppContainer(MainNavigator);
+
+const App = () => {
+  return <Page />;
+};
+
+export default App;

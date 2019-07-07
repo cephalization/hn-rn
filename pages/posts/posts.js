@@ -1,19 +1,21 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import { stories } from "./debug-data";
-import { Post } from "../../components";
+import { Post } from "../../components/post";
 
-const generatePost = ({ id, ...story }) => <Post key={id} {...story} />;
+const generatePost = ({ push }) => ({ id, ...story }) => (
+  <Post key={id} onClick={story => push("Post", { story })} story={story} />
+);
 
-export const Posts = () => {
-  const posts = stories.map(generatePost);
+export const Posts = ({ navigation }) => {
+  const posts = stories.map(generatePost(navigation));
 
-  return <View style={styles.container}>{posts}</View>;
+  return <ScrollView style={styles.container}>{posts}</ScrollView>;
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 16
+    paddingTop: 32
   }
 });
