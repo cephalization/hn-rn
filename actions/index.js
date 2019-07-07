@@ -1,0 +1,1 @@
+export { topPosts } from "./posts";

@@ -1,9 +1,11 @@
 import React from "react";
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import { Provider } from "react-redux";
 
 import { Posts } from "./pages";
 import { PostContent } from "./pages/post-content";
 import { theme } from "./theme";
+import store from "./store";
 
 const MainNavigator = createStackNavigator(
   {
@@ -24,8 +26,14 @@ const MainNavigator = createStackNavigator(
 
 const Page = createAppContainer(MainNavigator);
 
+console.log(store.getState());
+
 const App = () => {
-  return <Page />;
+  return (
+    <Provider store={store}>
+      <Page />
+    </Provider>
+  );
 };
 
 export default App;
