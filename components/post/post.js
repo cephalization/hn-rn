@@ -5,7 +5,7 @@ import {
   TouchableNativeFeedback,
   Platform
 } from "react-native";
-import { Block, Text } from "galio-framework";
+import { Block, Text, Icon } from "galio-framework";
 
 import { theme } from "../../theme";
 
@@ -24,11 +24,16 @@ const Post = ({ story, onClick }) => {
       <Block row center card shadow space="between" style={styles.card}>
         <Block flex>
           <Text h6>{title}</Text>
-          <Text muted>
-            {by}
-            {url && ` - ${url}`}
-          </Text>
-          <Text muted>{score}</Text>
+          <Block style={{ marginTop: 10 }}>
+            <Text numberOfLines={1} muted>
+              {by}
+              {url && ` - ${url}`}
+            </Text>
+            <Text muted style={{ marginLeft: -5, marginTop: 5 }}>
+              <Icon name="arrowup" family="AntDesign" size={14} />
+              {score}
+            </Text>
+          </Block>
         </Block>
       </Block>
     </Touchable>

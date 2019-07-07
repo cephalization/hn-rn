@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, ScrollView, Dimensions, Platform } from "react-native";
 import { Text, Block } from "galio-framework";
 import HTML from "react-native-render-html";
 import { WebView } from "react-native-webview";
@@ -20,7 +20,11 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
           />
         </ScrollView>
       ) : (
-        <WebView style={styles.webview} source={{ uri: story.url }} />
+        <WebView
+          webview={Platform.OS === "ios"}
+          style={styles.webview}
+          source={{ uri: story.url }}
+        />
       )}
     </Block>
   );

@@ -13,6 +13,7 @@ const MainNavigator = createStackNavigator(
   {
     initialRouteName: "Home",
     defaultNavigationOptions: {
+      headerTintColor: theme.white,
       headerStyle: {
         backgroundColor: theme.primary,
         fontFamily: "System"
