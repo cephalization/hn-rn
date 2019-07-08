@@ -7,10 +7,12 @@ import {
   Platform
 } from "react-native";
 import { Text, Block, Icon, theme as galioTheme } from "galio-framework";
-import HTML from "react-native-render-html";
 import { WebView } from "react-native-webview";
+import HTML from "react-native-render-html";
 
+import { comments } from "./debug-data";
 import { theme } from "../../theme";
+import { Comment } from "../../components/comment/Comment";
 
 export const PostContent = ({ navigation: { getParam, navigate } }) => {
   const story = getParam("story");
@@ -51,8 +53,10 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
               }}
             />
           </View>
-          <ScrollView>
-            <Text>Comments would go here...</Text>
+          <ScrollView style={styles.comments}>
+            {comments.map(comment => (
+              <Comment key={comment.id} {...comment} />
+            ))}
           </ScrollView>
         </>
       ) : (
@@ -69,12 +73,12 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    paddingBottom: 0,
     backgroundColor: theme.white,
     color: theme.black,
     borderColor: galioTheme.COLORS.MUTED,
-    borderBottomWidth: 2
+    borderBottomWidth: 1
   },
+  comments: {},
   webview: {
     flex: 1,
     height: "100%",
