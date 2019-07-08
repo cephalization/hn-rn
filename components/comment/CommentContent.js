@@ -18,8 +18,15 @@ export const CommentContent = ({ by, text, time, collapsed }) => (
       <Text h6 bold>
         {by}
       </Text>
-      {collapsed && <Icon name="chevron-thin-down" family="Entypo" />}
-      <Text muted>{time}</Text>
+      {collapsed ? (
+        <Icon
+          style={{ marginLeft: 5 }}
+          name="chevron-thin-down"
+          family="Entypo"
+        />
+      ) : (
+        <Text muted>{time}</Text>
+      )}
     </Block>
     {!collapsed && (
       <HTML
