@@ -21,51 +21,51 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
 
   return (
     <Block flex>
-      {story.text ? (
-        <>
-          <Block style={styles.postHeader}>
-            <Text style={styles.headerText} h5>
-              {story.title}
-            </Text>
-            <Text style={{ marginTop: 10 }} muted>
-              by{" "}
-              <Text muted bold>
-                {story.by}
+      <ScrollView bounces={false} style={styles.comments}>
+        {story.text ? (
+          <>
+            <Block style={styles.postHeader}>
+              <Text style={styles.headerText} h5>
+                {story.title}
               </Text>
-            </Text>
-            <Text muted style={{ marginLeft: -5, marginTop: 5 }}>
-              <Icon
-                color={galioTheme.COLORS.MUTED}
-                name="arrowup"
-                family="AntDesign"
-                size={14}
+              <Text style={{ marginTop: 10 }} muted>
+                by{" "}
+                <Text muted bold>
+                  {story.by}
+                </Text>
+              </Text>
+              <Text muted style={{ marginLeft: -5, marginTop: 5 }}>
+                <Icon
+                  color={galioTheme.COLORS.MUTED}
+                  name="arrowup"
+                  family="AntDesign"
+                  size={14}
+                />
+                {story.score}
+              </Text>
+            </Block>
+            <View style={styles.container}>
+              <HTML
+                html={story.text}
+                imagesMaxWidth={Dimensions.get("window").width}
+                baseFontStyle={{
+                  color: theme.black,
+                  fontSize: galioTheme.SIZES.FONT
+                }}
               />
-              {story.score}
-            </Text>
-          </Block>
-          <View style={styles.container}>
-            <HTML
-              html={story.text}
-              imagesMaxWidth={Dimensions.get("window").width}
-              baseFontStyle={{
-                color: theme.black,
-                fontSize: galioTheme.SIZES.FONT
-              }}
-            />
-          </View>
-          <ScrollView style={styles.comments}>
+            </View>
             {comments.map(comment => (
               <Comment key={comment.id} {...comment} />
             ))}
-          </ScrollView>
-        </>
-      ) : (
-        <WebView
-          useWebKit={Platform.OS === "ios"}
-          style={styles.webview}
-          source={{ uri: story.url }}
-        />
-      )}
+          </>
+        ) : (
+          <WebView
+            useWebKit={Platform.OS === "ios"}
+            style={styles.webview}
+            source={{ uri: story.url }}
+          />
+        )}
+      </ScrollView>
     </Block>
   );
 };
