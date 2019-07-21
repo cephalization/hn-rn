@@ -4,69 +4,91 @@ import {
   View,
   ScrollView,
   Dimensions,
-  Platform
+  Platform,
+  SafeAreaView
 } from "react-native";
 import { Text, Block, Icon, theme as galioTheme } from "galio-framework";
 import { WebView } from "react-native-webview";
 import HTML from "react-native-render-html";
 
-import { comments } from "./debug-data";
 import { theme } from "../../theme";
 import { Comment } from "../../components/comment/Comment";
+import { useDecendants } from "../../hooks";
+import { LoadMoreComments } from "../../components/comment/load-more-comments";
 
 export const PostContent = ({ navigation: { getParam, navigate } }) => {
   const story = getParam("story");
+  const { comments, loading, commentsLeft, loadComments } = useDecendants({
+    kids: story.kids
+  });
 
   if (!story || (!story.text && !story.url)) return navigate.push("Home");
 
   return (
-    <Block flex>
-      <ScrollView bounces={false} style={styles.comments}>
-        {story.text ? (
-          <>
-            <Block style={styles.postHeader}>
-              <Text style={styles.headerText} h5>
-                {story.title}
-              </Text>
-              <Text style={{ marginTop: 10 }} muted>
-                by{" "}
-                <Text muted bold>
-                  {story.by}
+    <SafeAreaView style={{ flex: 1 }}>
+      <Block flex>
+        <ScrollView bounces={false} style={styles.comments}>
+          {story.text ? (
+            <>
+              <Block style={styles.postHeader}>
+                <Text style={styles.headerText} h5>
+                  {story.title}
                 </Text>
-              </Text>
-              <Text muted style={{ marginLeft: -5, marginTop: 5 }}>
-                <Icon
-                  color={galioTheme.COLORS.MUTED}
-                  name="arrowup"
-                  family="AntDesign"
-                  size={14}
+                <Text style={{ marginTop: 10 }} muted>
+                  by{" "}
+                  <Text muted bold>
+                    {story.by}
+                  </Text>
+                </Text>
+                <Text muted style={{ marginLeft: -5, marginTop: 5 }}>
+                  <Icon
+                    color={galioTheme.COLORS.MUTED}
+                    name="arrowup"
+                    family="AntDesign"
+                    size={14}
+                  />
+                  {story.score}
+                </Text>
+              </Block>
+              <View style={styles.container}>
+                <HTML
+                  html={story.text}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                  baseFontStyle={{
+                    color: theme.black,
+                    fontSize: galioTheme.SIZES.FONT
+                  }}
                 />
-                {story.score}
-              </Text>
-            </Block>
-            <View style={styles.container}>
-              <HTML
-                html={story.text}
-                imagesMaxWidth={Dimensions.get("window").width}
-                baseFontStyle={{
-                  color: theme.black,
-                  fontSize: galioTheme.SIZES.FONT
-                }}
-              />
-            </View>
-            {comments.map(comment => (
-              <Comment key={comment.id} {...comment} />
-            ))}
-          </>
-        ) : (
-          <WebView
-            useWebKit={Platform.OS === "ios"}
-            style={styles.webview}
-            source={{ uri: story.url }}
-          />
-        )}
-      </ScrollView>
-    </Block>
+              </View>
+              {comments.map(comment => (
+                <Comment key={comment.id} {...comment} />
+              ))}
+              {loading && (
+                <Block
+                  flex
+                  style={{
+                    padding: 15,
+                    borderBottomWidth: 1,
+                    borderColor: galioTheme.COLORS.MUTED
+                  }}
+                >
+                  <Text muted>"Loading..."</Text>
+                </Block>
+              )}
+              {commentsLeft > 0 && !loading && (
+                <LoadMoreComments onPress={loadComments} />
+              )}
+            </>
+          ) : (
+            <WebView
+              useWebKit={Platform.OS === "ios"}
+              style={styles.webview}
+              source={{ uri: story.url }}
+            />
+          )}
+        </ScrollView>
+      </Block>
+    </SafeAreaView>
   );
 };
 
@@ -78,7 +100,9 @@ const styles = StyleSheet.create({
     borderColor: galioTheme.COLORS.MUTED,
     borderBottomWidth: 1
   },
-  comments: {},
+  comments: {
+    paddingBottom: 30
+  },
   webview: {
     flex: 1,
     height: "100%",
