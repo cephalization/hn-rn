@@ -4,7 +4,8 @@ import {
   View,
   ScrollView,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
+  TouchableWithoutFeedback
 } from "react-native";
 import { Text, Block, Icon, theme as galioTheme } from "galio-framework";
 import HTML from "react-native-render-html";
@@ -29,8 +30,17 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
         <ScrollView bounces={false} style={styles.comments}>
           <Block style={styles.postHeader}>
             <Text style={styles.headerText} h5>
-              {story.title || story.url}
+              {story.title}
             </Text>
+            {story.url && (
+              <TouchableWithoutFeedback
+                onPress={() => WebBrowser.openBrowserAsync(story.url)}
+              >
+                <Text style={{ paddingTop: 5 }} muted numberOfLines={1}>
+                  {story.url}
+                </Text>
+              </TouchableWithoutFeedback>
+            )}
             <Text style={{ marginTop: 10 }} muted>
               by{" "}
               <Text muted bold>
@@ -48,17 +58,21 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
             </Text>
           </Block>
           <View style={styles.container}>
-            <HTML
-              html={story.text}
-              onLinkPress={(e, href) => {
-                WebBrowser.openBrowserAsync(href);
-              }}
-              imagesMaxWidth={Dimensions.get("window").width}
-              baseFontStyle={{
-                color: theme.black,
-                fontSize: galioTheme.SIZES.FONT
-              }}
-            />
+            {story.text && (
+              <View style={{ padding: 16 }}>
+                <HTML
+                  html={story.text}
+                  onLinkPress={(e, href) => {
+                    WebBrowser.openBrowserAsync(href);
+                  }}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                  baseFontStyle={{
+                    color: theme.black,
+                    fontSize: galioTheme.SIZES.FONT
+                  }}
+                />
+              </View>
+            )}
           </View>
           {comments.map(comment => (
             <Comment key={comment.id} {...comment} />
@@ -86,7 +100,6 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
     backgroundColor: theme.white,
     color: theme.black,
     borderColor: galioTheme.COLORS.MUTED,

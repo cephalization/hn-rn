@@ -25,7 +25,7 @@ const Post = ({ story, onClick }) => {
   };
 
   return (
-    <Touchable style={styles.touchable} onPress={onPress}>
+    <Touchable style={styles.touchable} onPress={onPress} onLongPress={onClick}>
       <Block row center card shadow space="between" style={styles.card}>
         <Block flex>
           <Text h6>{title}</Text>
