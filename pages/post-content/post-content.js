@@ -4,27 +4,43 @@ import {
   View,
   ScrollView,
   Dimensions,
-  Platform
+  SafeAreaView,
+  TouchableWithoutFeedback
 } from "react-native";
 import { Text, Block, Icon, theme as galioTheme } from "galio-framework";
 import HTML from "react-native-render-html";
-import { WebView } from "react-native-webview";
+import * as WebBrowser from "expo-web-browser";
 
 import { theme } from "../../theme";
+import { Comment } from "../../components/comment/Comment";
+import { useDecendants } from "../../hooks";
+import { LoadMoreComments } from "../../components/comment/load-more-comments";
 
 export const PostContent = ({ navigation: { getParam, navigate } }) => {
   const story = getParam("story");
+  const { comments, loading, commentsLeft, loadComments } = useDecendants({
+    kids: story.kids
+  });
 
   if (!story || (!story.text && !story.url)) return navigate.push("Home");
 
   return (
-    <Block flex>
-      {story.text ? (
-        <>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Block flex>
+        <ScrollView bounces={false} style={styles.comments}>
           <Block style={styles.postHeader}>
             <Text style={styles.headerText} h5>
               {story.title}
             </Text>
+            {story.url && (
+              <TouchableWithoutFeedback
+                onPress={() => WebBrowser.openBrowserAsync(story.url)}
+              >
+                <Text style={{ paddingTop: 5 }} muted numberOfLines={1}>
+                  {story.url}
+                </Text>
+              </TouchableWithoutFeedback>
+            )}
             <Text style={{ marginTop: 10 }} muted>
               by{" "}
               <Text muted bold>
@@ -42,38 +58,55 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
             </Text>
           </Block>
           <View style={styles.container}>
-            <HTML
-              html={story.text}
-              imagesMaxWidth={Dimensions.get("window").width}
-              baseFontStyle={{
-                color: theme.black,
-                fontSize: galioTheme.SIZES.FONT
-              }}
-            />
+            {story.text && (
+              <View style={{ padding: 16 }}>
+                <HTML
+                  html={story.text}
+                  onLinkPress={(e, href) => {
+                    WebBrowser.openBrowserAsync(href);
+                  }}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                  baseFontStyle={{
+                    color: theme.black,
+                    fontSize: galioTheme.SIZES.FONT
+                  }}
+                />
+              </View>
+            )}
           </View>
-          <ScrollView>
-            <Text>Comments would go here...</Text>
-          </ScrollView>
-        </>
-      ) : (
-        <WebView
-          useWebKit={Platform.OS === "ios"}
-          style={styles.webview}
-          source={{ uri: story.url }}
-        />
-      )}
-    </Block>
+          {comments.map(comment => (
+            <Comment key={comment.id} {...comment} />
+          ))}
+          {loading && (
+            <Block
+              flex
+              style={{
+                padding: 15,
+                borderBottomWidth: 1,
+                borderColor: galioTheme.COLORS.MUTED
+              }}
+            >
+              <Text muted>"Loading..."</Text>
+            </Block>
+          )}
+          {commentsLeft > 0 && !loading && (
+            <LoadMoreComments onPress={loadComments} />
+          )}
+        </ScrollView>
+      </Block>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    paddingBottom: 0,
     backgroundColor: theme.white,
     color: theme.black,
     borderColor: galioTheme.COLORS.MUTED,
-    borderBottomWidth: 2
+    borderBottomWidth: 1
+  },
+  comments: {
+    paddingBottom: 30
   },
   webview: {
     flex: 1,
