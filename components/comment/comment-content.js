@@ -2,6 +2,7 @@ import React from "react";
 import { Dimensions } from "react-native";
 import { Text, Block, Icon, theme as galioTheme } from "galio-framework";
 import HTML from "react-native-render-html";
+import * as WebBrowser from "expo-web-browser";
 
 import { theme } from "../../theme";
 
@@ -32,6 +33,9 @@ export const CommentContent = ({ by, text, time, collapsed }) => (
       <HTML
         html={text}
         style={{ marginTop: 8 }}
+        onLinkPress={(e, href) => {
+          WebBrowser.openBrowserAsync(href);
+        }}
         imagesMaxWidth={Dimensions.get("window").width}
         baseFontStyle={{
           color: theme.black,

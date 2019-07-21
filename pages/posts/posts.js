@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
-import { stories } from "./debug-data";
 import { Post } from "../../components/post";
 import { usePosts } from "../../hooks";
 
@@ -15,7 +14,7 @@ export const Posts = ({ navigation }) => {
   const { loading, posts, getAllPostIds, getNextPosts } = usePosts();
 
   useEffect(() => {
-    // getAllPostIds();
+    getAllPostIds();
   }, []);
 
   return (
@@ -24,7 +23,7 @@ export const Posts = ({ navigation }) => {
       renderItem={generatePost(navigation)}
       onRefresh={getAllPostIds}
       onEndReached={getNextPosts}
-      data={stories}
+      data={posts}
       keyExtractor={extractor}
       refreshing={loading}
       onEndReachedThreshold={1.5}

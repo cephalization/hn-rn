@@ -6,6 +6,7 @@ import {
   Platform
 } from "react-native";
 import { Block, Text, Icon } from "galio-framework";
+import * as WebBrowser from "expo-web-browser";
 
 import { theme } from "../../theme";
 
@@ -16,7 +17,11 @@ const Post = ({ story, onClick }) => {
   const { title, score, url, by } = story;
 
   const onPress = () => {
-    onClick();
+    if (url) {
+      WebBrowser.openBrowserAsync(url);
+    } else {
+      onClick();
+    }
   };
 
   return (

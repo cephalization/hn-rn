@@ -4,12 +4,11 @@ import {
   View,
   ScrollView,
   Dimensions,
-  Platform,
   SafeAreaView
 } from "react-native";
 import { Text, Block, Icon, theme as galioTheme } from "galio-framework";
-import { WebView } from "react-native-webview";
 import HTML from "react-native-render-html";
+import * as WebBrowser from "expo-web-browser";
 
 import { theme } from "../../theme";
 import { Comment } from "../../components/comment/Comment";
@@ -28,63 +27,56 @@ export const PostContent = ({ navigation: { getParam, navigate } }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <Block flex>
         <ScrollView bounces={false} style={styles.comments}>
-          {story.text ? (
-            <>
-              <Block style={styles.postHeader}>
-                <Text style={styles.headerText} h5>
-                  {story.title}
-                </Text>
-                <Text style={{ marginTop: 10 }} muted>
-                  by{" "}
-                  <Text muted bold>
-                    {story.by}
-                  </Text>
-                </Text>
-                <Text muted style={{ marginLeft: -5, marginTop: 5 }}>
-                  <Icon
-                    color={galioTheme.COLORS.MUTED}
-                    name="arrowup"
-                    family="AntDesign"
-                    size={14}
-                  />
-                  {story.score}
-                </Text>
-              </Block>
-              <View style={styles.container}>
-                <HTML
-                  html={story.text}
-                  imagesMaxWidth={Dimensions.get("window").width}
-                  baseFontStyle={{
-                    color: theme.black,
-                    fontSize: galioTheme.SIZES.FONT
-                  }}
-                />
-              </View>
-              {comments.map(comment => (
-                <Comment key={comment.id} {...comment} />
-              ))}
-              {loading && (
-                <Block
-                  flex
-                  style={{
-                    padding: 15,
-                    borderBottomWidth: 1,
-                    borderColor: galioTheme.COLORS.MUTED
-                  }}
-                >
-                  <Text muted>"Loading..."</Text>
-                </Block>
-              )}
-              {commentsLeft > 0 && !loading && (
-                <LoadMoreComments onPress={loadComments} />
-              )}
-            </>
-          ) : (
-            <WebView
-              useWebKit={Platform.OS === "ios"}
-              style={styles.webview}
-              source={{ uri: story.url }}
+          <Block style={styles.postHeader}>
+            <Text style={styles.headerText} h5>
+              {story.title || story.url}
+            </Text>
+            <Text style={{ marginTop: 10 }} muted>
+              by{" "}
+              <Text muted bold>
+                {story.by}
+              </Text>
+            </Text>
+            <Text muted style={{ marginLeft: -5, marginTop: 5 }}>
+              <Icon
+                color={galioTheme.COLORS.MUTED}
+                name="arrowup"
+                family="AntDesign"
+                size={14}
+              />
+              {story.score}
+            </Text>
+          </Block>
+          <View style={styles.container}>
+            <HTML
+              html={story.text}
+              onLinkPress={(e, href) => {
+                WebBrowser.openBrowserAsync(href);
+              }}
+              imagesMaxWidth={Dimensions.get("window").width}
+              baseFontStyle={{
+                color: theme.black,
+                fontSize: galioTheme.SIZES.FONT
+              }}
             />
+          </View>
+          {comments.map(comment => (
+            <Comment key={comment.id} {...comment} />
+          ))}
+          {loading && (
+            <Block
+              flex
+              style={{
+                padding: 15,
+                borderBottomWidth: 1,
+                borderColor: galioTheme.COLORS.MUTED
+              }}
+            >
+              <Text muted>"Loading..."</Text>
+            </Block>
+          )}
+          {commentsLeft > 0 && !loading && (
+            <LoadMoreComments onPress={loadComments} />
           )}
         </ScrollView>
       </Block>
