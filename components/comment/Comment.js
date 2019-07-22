@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { Block, Text, theme as galioTheme } from "galio-framework";
-import {
-  TouchableOpacity,
-  TouchableNativeFeedback,
-  Platform
-} from "react-native";
+import { TouchableOpacity } from "react-native";
 
 import { useDecendants } from "../../hooks";
 import { CommentContent } from "./comment-content";
@@ -19,8 +15,7 @@ export const Comment = ({ by, text, time, kids, depth = 0 }) => {
     initialized: initializeChildComments
   });
   const toggleCollapsed = () => setCollapsed(collapsed => !collapsed);
-  const Touchable =
-    Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
+  const Touchable = TouchableOpacity;
 
   return (
     <Block flex>
