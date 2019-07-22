@@ -17,7 +17,9 @@ export const useDecendants = ({
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const commentsLeft = kids.length - childComments.length;
+  const commentsLeft =
+    index <= kids.length - 1 ? kids.length - childComments.length : 0;
+  const realLimit = Math.min(kids.length, limit);
 
   const loadComments = async () => {
     setLoading(true);
@@ -25,13 +27,15 @@ export const useDecendants = ({
       let i = index;
       let kid = kids[i];
       const comments = [];
-      while (i < index + limit && !!kid) {
+      while (i <= index + realLimit && !!kid) {
         try {
           const response = await fetch(
             `https://hacker-news.firebaseio.com/v0/item/${kid}.json`
           );
           const data = await response.json();
-          comments.push(data);
+          if (data.text) {
+            comments.push(data);
+          }
         } catch (e) {
           console.warn(`Could not fetch item ${kid}`);
         } finally {
@@ -45,7 +49,7 @@ export const useDecendants = ({
     setLoading(false);
   };
 
-  // Use an effect to load child comments based on kids
+  // Use an effect to load initial child comments
   useEffect(() => {
     if (initialized) {
       loadComments();
