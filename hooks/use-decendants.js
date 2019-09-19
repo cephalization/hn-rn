@@ -37,7 +37,8 @@ export const useDecendants = ({
             comments.push(data);
           }
         } catch (e) {
-          console.warn(`Could not fetch item ${kid}`);
+          // ignore bad fetches for now
+          console.log(`Could not fetch item ${kid}`);
         } finally {
           i += 1;
           kid = kids[i];

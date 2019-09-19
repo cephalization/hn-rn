@@ -2,9 +2,15 @@ import React from "react";
 import { Dimensions, View } from "react-native";
 import { Text, Block, Icon, theme as galioTheme } from "galio-framework";
 import HTML from "react-native-render-html";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 import * as WebBrowser from "expo-web-browser";
 
 import { theme } from "../../theme";
+
+TimeAgo.addLocale(en);
+
+const timeAgo = new TimeAgo("en-US");
 
 export const CommentContent = ({ by, text, time, collapsed }) => (
   <View>
@@ -27,7 +33,7 @@ export const CommentContent = ({ by, text, time, collapsed }) => (
             family="Entypo"
           />
         ) : (
-          <Text muted>{time}</Text>
+          <Text muted>{timeAgo.format(new Date(time * 1000))}</Text>
         )}
       </Block>
       {!collapsed && (
