@@ -47,12 +47,13 @@ const Post = ({ story, onClick }) => {
 
 const styles = StyleSheet.create({
   card: {
-    borderColor: "transparent",
+    borderColor: "#eee",
+    borderWidth: 1,
     marginHorizontal: 16,
     marginVertical: 8,
     padding: 16,
     backgroundColor: theme.white,
-    shadowOpacity: 0.4
+    shadowOpacity: 0.2
   },
   touchable: {
     width: "100%"
