@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 
 /**
- * TODO:
+ * Load the decendants of a resource up to a particular limit
  *
- * Fix this, it currently blocks threads until all comments are loaded.
- * This means that you can't interact with comments whatsoever
- *
- * @param {*} kids
+ * @param {array} kids - strings containing decendant IDs
+ * @param {number} limit - max decendants to load to
+ * @param {bool} initialized - if not initialized, load decendants on first mount
  */
 export const useDecendants = ({
   kids = [],
